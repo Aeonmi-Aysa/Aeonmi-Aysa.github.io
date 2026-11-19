@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en" style="scroll-behavior: smooth;"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AEONMI — The Ecosystem Beyond Knowing</title>
+<meta name="description" content="aeonmi.crypto — a Web 3.5 ecosystem. You thought you knew. You know nothing.">
+<meta property="og:title" content="AEONMI — The Ecosystem Beyond Knowing">
+<meta property="og:description" content="aeonmi.crypto — a Web 3.5 ecosystem. You thought you knew. You know nothing.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://aeonmi-aysa.github.io/">
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&amp;family=Space+Grotesk:wght@300;400;500;600&amp;family=IBM+Plex+Mono:wght@300;400&amp;display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<style>
+:root{
+  --void:#050507; --ink:#0a0a0f; --bone:#e8e4da; --ash:#8a8578;
+  --gold:#c9a86a; --gold-dim:#7a6647; --violet:#6b5ce7;
+  --line:rgba(201,168,106,.14);
+  --serif:'Cormorant Garamond',serif; --sans:'Space Grotesk',sans-serif; --mono:'IBM Plex Mono',monospace;
+}
+body.ghost{ --void:#e8e4da; --ink:#dcd7cb; --bone:#0a0a0f; --ash:#4a463c;
+  --gold:#7a5c1e; --gold-dim:#a89368; --violet:#4b3fd1; --line:rgba(90,70,30,.22); }
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--bone);font-family:var(--sans);overflow-x:hidden;cursor:none;transition:background .8s,color .8s}
+body.ghost .grain{opacity:.09}
+::selection{background:var(--gold);color:var(--void)}
+canvas#field{position:fixed;inset:0;z-index:0;pointer-events:none}
+.grain{position:fixed;inset:-100%;z-index:1;pointer-events:none;opacity:.05;transition:opacity .8s;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation:grain 8s steps(10) infinite}
+@keyframes grain{0%,100%{transform:translate(0,0)}10%{transform:translate(-5%,-10%)}30%{transform:translate(3%,-15%)}50%{transform:translate(12%,9%)}70%{transform:translate(9%,4%)}90%{transform:translate(-1%,7%)}}
+
+/* ── PRELOADER ─────────────────────────── */
+#loader{position:fixed;inset:0;z-index:2000;background:var(--void);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.6rem}
+#loader .glyph-cycle{font-family:var(--serif);font-style:italic;font-size:4rem;color:var(--gold);height:5rem}
+#loader .load-line{font-family:var(--serif);font-style:italic;font-size:1.1rem;color:var(--ash);letter-spacing:.08em}
+#loader .load-pct{font-family:var(--mono);font-size:.65rem;letter-spacing:.5em;color:var(--gold)}
+#loader .load-bar{width:220px;height:1px;background:rgba(201,168,106,.15);position:relative;overflow:hidden}
+#loader .load-bar i{position:absolute;inset:0;background:var(--gold);transform:scaleX(0);transform-origin:left}
+
+/* ── CURSOR ────────────────────────────── */
+.cursor{position:fixed;width:8px;height:8px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:9999;mix-blend-mode:difference;transform:translate(-50%,-50%)}
+.cursor-ring{position:fixed;width:36px;height:36px;border:1px solid rgba(201,168,106,.5);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .3s,height .3s,border-color .3s}
+.cursor-ring.hovering{width:64px;height:64px;border-color:var(--gold)}
+@media (hover:none){.cursor,.cursor-ring{display:none}body{cursor:auto}}
+
+/* ── PROGRESS + NAV ────────────────────── */
+#progress{position:fixed;top:0;left:0;height:2px;width:100%;z-index:300;background:transparent}
+#progress i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--violet));transform:scaleX(0);transform-origin:left}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:1.6rem 3rem;mix-blend-mode:difference}
+.logo{font-family:var(--serif);font-size:1.5rem;letter-spacing:.35em;font-weight:400;color:var(--bone);text-decoration:none}
+.logo em{color:var(--gold);font-style:normal}
+.nav-links{display:flex;gap:2.4rem;align-items:center}
+.nav-links a{color:var(--bone);text-decoration:none;font-family:var(--mono);font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;position:relative;opacity:.75;transition:opacity .3s;display:inline-block}
+.nav-links a:hover{opacity:1}
+.nav-links a::after{content:'';position:absolute;bottom:-6px;left:0;width:0;height:1px;background:var(--gold);transition:width .4s cubic-bezier(.77,0,.18,1)}
+.nav-links a:hover::after{width:100%}
+.btn-enter{font-family:var(--mono);font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:#050507!important;background:var(--bone);padding:.7rem 1.4rem;border-radius:2rem;opacity:1!important;transition:background .3s!important}
+.btn-enter:hover{background:var(--gold)}
+.btn-enter::after{display:none}
+@media(max-width:760px){.nav-links a:not(.btn-enter){display:none}nav{padding:1.2rem 1.4rem}}
+
+/* ── HERO ──────────────────────────────── */
+.hero{position:relative;z-index:2;min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:0 1.5rem}
+.hero-ring{position:absolute;width:min(78vmin,720px);height:min(78vmin,720px);opacity:.5;pointer-events:none}
+.hero-ring svg{width:100%;height:100%;animation:spin 60s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.hero-ring text{font-family:var(--mono);font-size:9.5px;letter-spacing:6px;fill:var(--gold-dim);text-transform:uppercase}
+.hero-eyebrow{font-family:var(--mono);font-size:.7rem;letter-spacing:.5em;text-transform:uppercase;color:var(--gold);margin-bottom:2.2rem;opacity:0}
+.hero h1{font-family:var(--serif);font-weight:300;font-size:clamp(3.2rem,11vw,9.5rem);line-height:.95;letter-spacing:.02em;position:relative}
+.hero h1 .line{display:block;overflow:hidden}
+.hero h1 .line span{display:inline-block;transform:translateY(110%)}
+.hero h1 em{font-style:italic;color:var(--gold);cursor:none;position:relative;display:inline-block}
+.hero-sub{margin-top:2.6rem;font-family:var(--serif);font-style:italic;font-size:clamp(1.05rem,2.2vw,1.5rem);color:var(--ash);max-width:34ch;opacity:0}
+.hero-domains{margin-top:3.4rem;display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;opacity:0}
+.domain-chip{font-family:var(--mono);font-size:.68rem;letter-spacing:.15em;padding:.6rem 1.2rem;border:1px solid var(--line);border-radius:2rem;color:var(--ash);background:rgba(10,10,15,.5);backdrop-filter:blur(8px);transition:border-color .3s,color .3s}
+body.ghost .domain-chip{background:rgba(232,228,218,.5)}
+.domain-chip:hover{border-color:var(--gold);color:var(--bone)}
+.domain-chip b{color:var(--gold);font-weight:400}
+.scroll-cue{position:absolute;bottom:2.4rem;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:.6rem;letter-spacing:.4em;color:var(--ash);text-transform:uppercase;display:flex;flex-direction:column;align-items:center;gap:.8rem}
+.scroll-cue::after{content:'';width:1px;height:44px;background:linear-gradient(var(--gold),transparent);animation:cue 2s ease infinite}
+@keyframes cue{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+/* ── MARQUEE ───────────────────────────── */
+.marquee{position:relative;z-index:2;overflow:hidden;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:1.1rem 0;background:rgba(10,10,15,.35);backdrop-filter:blur(6px)}
+body.ghost .marquee{background:rgba(232,228,218,.3)}
+.marquee-track{display:flex;gap:3rem;white-space:nowrap;font-family:var(--serif);font-style:italic;font-size:1.15rem;color:var(--ash);animation:marq 28s linear infinite;width:max-content}
+.marquee-track b{color:var(--gold);font-weight:400}
+@keyframes marq{to{transform:translateX(-50%)}}
+
+/* ── SECTIONS ──────────────────────────── */
+section{position:relative;z-index:2;padding:9rem 3rem;max-width:1400px;margin:0 auto}
+@media(max-width:760px){section{padding:6rem 1.4rem}}
+.sec-label{font-family:var(--mono);font-size:.65rem;letter-spacing:.5em;text-transform:uppercase;color:var(--gold);margin-bottom:1.4rem;display:flex;align-items:center;gap:1rem}
+.sec-label::before{content:'';width:44px;height:1px;background:var(--gold-dim)}
+.sec-title{font-family:var(--serif);font-weight:300;font-size:clamp(2.2rem,5.5vw,4.4rem);line-height:1.05;max-width:20ch}
+.sec-title em{font-style:italic;color:var(--gold)}
+.reveal{opacity:0;transform:translateY(50px)}
+
+/* ── DOCTRINE (spotlight + tilt) ───────── */
+.doctrine-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);margin-top:4.5rem;perspective:1200px}
+.doctrine-cell{background:var(--ink);padding:3rem 2.4rem;position:relative;overflow:hidden;transition:background .5s;transform-style:preserve-3d;will-change:transform}
+.doctrine-cell:hover{background:#0e0d14}
+body.ghost .doctrine-cell:hover{background:#cfc9bc}
+.doctrine-cell::before{content:attr(data-n);position:absolute;top:1.4rem;right:1.6rem;font-family:var(--mono);font-size:.62rem;color:var(--gold-dim);letter-spacing:.2em}
+.doctrine-cell .spot{position:absolute;inset:0;opacity:0;transition:opacity .4s;pointer-events:none;
+  background:radial-gradient(320px circle at var(--mx,50%) var(--my,50%),rgba(201,168,106,.12),transparent 65%)}
+.doctrine-cell:hover .spot{opacity:1}
+.doctrine-cell h3{font-family:var(--serif);font-weight:400;font-size:1.7rem;margin-bottom:1rem;font-style:italic;position:relative}
+.doctrine-cell p{font-size:.88rem;line-height:1.75;color:var(--ash);position:relative}
+.doctrine-cell .glyph{position:absolute;bottom:-2rem;right:-1rem;font-family:var(--serif);font-size:9rem;color:rgba(201,168,106,.05);font-style:italic;pointer-events:none;line-height:1}
+
+/* ── ECOSYSTEM ORBIT ───────────────────── */
+.orbit-stage{margin-top:4.5rem;position:relative;height:640px;border:1px solid var(--line);border-radius:1.4rem;background:radial-gradient(ellipse at 50% 50%,rgba(107,92,231,.06),transparent 70%),rgba(10,10,15,.5);overflow:hidden}
+body.ghost .orbit-stage{background:rgba(232,228,218,.4)}
+.orbit-ring{position:absolute;top:50%;left:50%;border:1px dashed rgba(201,168,106,.14);border-radius:50%;transform:translate(-50%,-50%);pointer-events:none}
+.orbit-core{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:120px;height:120px;border-radius:50%;border:1px solid var(--gold);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.3rem;background:var(--void);box-shadow:0 0 60px rgba(201,168,106,.18);z-index:3;text-align:center}
+.orbit-core .c-glyph{font-family:var(--serif);font-style:italic;font-size:2rem;color:var(--gold)}
+.orbit-core .c-name{font-family:var(--mono);font-size:.5rem;letter-spacing:.18em;color:var(--ash);text-transform:uppercase}
+.orbit-link{position:absolute;top:50%;left:50%;height:1px;background:linear-gradient(90deg,rgba(201,168,106,.5),transparent);transform-origin:left center;opacity:0;transition:opacity .4s;pointer-events:none;z-index:1}
+.orbit-node{position:absolute;width:118px;padding:1rem .8rem;border:1px solid var(--line);border-radius:.9rem;background:var(--ink);text-align:center;transform:translate(-50%,-50%);cursor:none;transition:border-color .4s,box-shadow .4s;z-index:2;user-select:none}
+.orbit-node:hover{border-color:var(--gold)}
+.orbit-node.active{border-color:var(--gold);box-shadow:0 0 34px rgba(201,168,106,.28)}
+.orbit-node .o-icon{font-family:var(--serif);font-style:italic;font-size:1.4rem;color:var(--gold);line-height:1.2}
+.orbit-node .o-name{font-family:var(--mono);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--bone);margin-top:.35rem}
+.orbit-node .o-tag{font-family:var(--mono);font-size:.5rem;letter-spacing:.1em;color:var(--violet);margin-top:.25rem}
+.orbit-detail{position:absolute;right:2rem;top:50%;transform:translateY(-50%) translateX(30px);width:min(320px,80vw);border:1px solid var(--line);border-radius:1rem;background:rgba(10,10,15,.88);backdrop-filter:blur(12px);padding:1.8rem;opacity:0;pointer-events:none;transition:opacity .45s,transform .45s;z-index:4}
+body.ghost .orbit-detail{background:rgba(232,228,218,.9)}
+.orbit-detail.show{opacity:1;transform:translateY(-50%) translateX(0);pointer-events:auto}
+.orbit-detail h4{font-family:var(--serif);font-style:italic;font-weight:400;font-size:1.5rem;margin-bottom:.6rem;color:var(--gold)}
+.orbit-detail p{font-size:.82rem;line-height:1.75;color:var(--ash)}
+.orbit-detail .d-tag{display:inline-block;margin-top:1rem;font-family:var(--mono);font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--violet);border:1px solid rgba(107,92,231,.35);padding:.4rem .9rem;border-radius:2rem}
+.orbit-hint{position:absolute;bottom:1.2rem;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:.58rem;letter-spacing:.3em;color:var(--ash);text-transform:uppercase}
+@media(max-width:860px){.orbit-stage{height:560px}.orbit-detail{right:50%;transform:translateY(0) translateX(50%);top:auto;bottom:3.4rem}.orbit-detail.show{transform:translateY(0) translateX(50%)}}
+
+/* ── BRIDGE / RESOLVER ─────────────────── */
+.resolver{margin-top:4.5rem;border:1px solid var(--line);border-radius:1.2rem;background:var(--ink);overflow:hidden}
+.resolver-bar{display:flex;gap:.8rem;padding:1.4rem;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.resolver-bar .prompt{font-family:var(--mono);color:var(--gold);font-size:1rem;align-self:center}
+.resolver-bar input{flex:1;min-width:200px;background:transparent;border:none;outline:none;color:var(--bone);font-family:var(--mono);font-size:1rem;letter-spacing:.05em;cursor:none}
+.resolver-bar input::placeholder{color:var(--ash)}
+.resolver-body{display:grid;grid-template-columns:1fr 1fr;min-height:280px}
+@media(max-width:820px){.resolver-body{grid-template-columns:1fr}}
+.res-pane{padding:2.2rem;border-right:1px solid var(--line)}
+.res-pane:last-child{border-right:none}
+body.ghost .res-pane{border-color:var(--line)}
+.res-pane h4{font-family:var(--mono);font-size:.62rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:1.4rem}
+.res-step{font-family:var(--mono);font-size:.72rem;color:var(--ash);padding:.7rem 0;border-bottom:1px solid rgba(232,228,218,.06);display:flex;gap:.9rem;align-items:baseline;opacity:0;transform:translateX(-12px)}
+.res-step .k{color:var(--violet);flex-shrink:0;min-width:64px}
+.res-step .v{color:var(--bone);word-break:break-all}
+.res-idle{font-family:var(--serif);font-style:italic;color:var(--ash);font-size:1.05rem;padding:2rem 0;text-align:center;grid-column:1/-1}
+.resolver-hint{padding:1rem 1.4rem;border-top:1px solid var(--line);font-family:var(--mono);font-size:.6rem;letter-spacing:.2em;color:var(--ash);text-transform:uppercase}
+
+/* ── EMAIL FORGE ───────────────────────── */
+.email-band{position:relative;z-index:2;margin:6rem auto;max-width:1400px;padding:0 3rem}
+@media(max-width:760px){.email-band{padding:0 1.4rem}}
+.email-inner{border:1px solid var(--line);border-radius:1.4rem;padding:4.5rem 3.5rem;background:radial-gradient(ellipse at 30% 0%,rgba(107,92,231,.12),transparent 60%),radial-gradient(ellipse at 80% 100%,rgba(201,168,106,.1),transparent 55%),var(--ink);text-align:center;position:relative;overflow:hidden}
+.email-inner h2{font-family:var(--serif);font-weight:300;font-size:clamp(2rem,4.5vw,3.4rem);margin-bottom:1rem}
+.email-inner h2 em{font-style:italic;color:var(--gold)}
+.forge-row{display:flex;justify-content:center;align-items:center;gap:0;margin:2.2rem auto 1rem;max-width:560px;border:1px solid rgba(201,168,106,.4);border-radius:.7rem;background:rgba(5,5,7,.6);overflow:hidden}
+body.ghost .forge-row{background:rgba(232,228,218,.6)}
+.forge-row input{flex:1;background:transparent;border:none;outline:none;color:var(--gold);font-family:var(--mono);font-size:clamp(.85rem,2.4vw,1.1rem);letter-spacing:.06em;padding:1.05rem 1.2rem;cursor:none;text-align:right;min-width:0}
+.forge-row input::placeholder{color:var(--gold-dim)}
+.forge-row .suffix{font-family:var(--mono);font-size:clamp(.85rem,2.4vw,1.1rem);color:var(--bone);padding-right:1.2rem;white-space:nowrap}
+.copy-btn{border:none;background:transparent;color:var(--gold);font-family:var(--mono);font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;padding:1.05rem 1.1rem;border-left:1px solid rgba(201,168,106,.4);cursor:none;transition:background .3s,color .3s}
+.copy-btn:hover{background:var(--gold);color:var(--void)}
+.btn-gold{display:inline-block;font-family:var(--mono);font-size:.72rem;letter-spacing:.25em;text-transform:uppercase;color:var(--void);background:var(--gold);border:none;padding:1.1rem 2.6rem;border-radius:3rem;cursor:none;text-decoration:none;transition:transform .3s,box-shadow .3s}
+.btn-gold:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(201,168,106,.35)}
+.btn-ghost{display:inline-block;font-family:var(--mono);font-size:.72rem;letter-spacing:.25em;text-transform:uppercase;color:var(--bone);background:transparent;border:1px solid rgba(232,228,218,.3);padding:1.1rem 2.6rem;border-radius:3rem;cursor:none;text-decoration:none;margin-left:1rem;transition:border-color .3s,color .3s}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
+@media(max-width:600px){.btn-ghost{margin-left:0;margin-top:1rem}}
+
+/* ── MODAL ─────────────────────────────── */
+.modal{position:fixed;inset:0;z-index:500;display:none;align-items:center;justify-content:center;padding:1.5rem}
+.modal.open{display:flex}
+.modal-bg{position:absolute;inset:0;background:rgba(5,5,7,.82);backdrop-filter:blur(14px)}
+.modal-card{position:relative;width:100%;max-width:460px;background:var(--ink);border:1px solid var(--line);border-radius:1.2rem;padding:3rem;animation:rise .5s cubic-bezier(.22,1,.36,1)}
+@keyframes rise{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:none}}
+.modal-card h3{font-family:var(--serif);font-weight:300;font-size:2rem;font-style:italic;margin-bottom:.4rem}
+.modal-card .sub{font-family:var(--mono);font-size:.65rem;letter-spacing:.25em;text-transform:uppercase;color:var(--ash);margin-bottom:2.2rem}
+.auth-opt{display:flex;align-items:center;gap:1.1rem;width:100%;background:rgba(232,228,218,.04);border:1px solid rgba(232,228,218,.12);border-radius:.8rem;padding:1.1rem 1.3rem;margin-bottom:.9rem;color:var(--bone);font-family:var(--sans);font-size:.88rem;cursor:none;transition:border-color .3s,background .3s;text-align:left}
+.auth-opt:hover{border-color:var(--gold);background:rgba(201,168,106,.06)}
+.auth-opt .dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.modal-close{position:absolute;top:1.2rem;right:1.4rem;background:none;border:none;color:var(--ash);font-size:1.4rem;cursor:none;transition:color .3s}
+.modal-close:hover{color:var(--gold)}
+.divider{display:flex;align-items:center;gap:1rem;margin:1.6rem 0;font-family:var(--mono);font-size:.6rem;letter-spacing:.3em;color:var(--ash);text-transform:uppercase}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:rgba(232,228,218,.1)}
+.auth-flow{margin-top:1.4rem;display:none}
+.auth-flow.show{display:block}
+.flow-step{display:flex;align-items:center;gap:1rem;font-family:var(--mono);font-size:.74rem;color:var(--ash);padding:.85rem 0;opacity:0;transform:translateY(10px)}
+.flow-step .f-dot{width:8px;height:8px;border-radius:50%;background:var(--ash);flex-shrink:0;transition:background .3s}
+.flow-step.working .f-dot{background:var(--violet);animation:pulse 1s ease infinite}
+.flow-step.done .f-dot{background:var(--gold)}
+@keyframes pulse{50%{opacity:.3}}
+.stamp{display:none;margin-top:1.6rem;text-align:center;font-family:var(--serif);font-style:italic;font-size:1.5rem;color:var(--gold)}
+.stamp.show{display:block;animation:stampIn .5s cubic-bezier(.22,1,.36,1)}
+@keyframes stampIn{from{opacity:0;transform:scale(1.4) rotate(-6deg)}to{opacity:1;transform:none}}
+
+/* ── FOOTER / TOAST ────────────────────── */
+footer{position:relative;z-index:2;border-top:1px solid var(--line);padding:4rem 3rem 3rem;max-width:1400px;margin:0 auto;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:2rem}
+footer .big{font-family:var(--serif);font-weight:300;font-size:clamp(2.4rem,7vw,5rem);font-style:italic;color:rgba(232,228,218,.16);line-height:1}
+body.ghost footer .big{color:rgba(10,10,15,.14)}
+footer .meta{font-family:var(--mono);font-size:.62rem;letter-spacing:.2em;color:var(--ash);text-transform:uppercase;line-height:2.2;text-align:right}
+footer .meta b{color:var(--gold);font-weight:400}
+.toast{position:fixed;bottom:2rem;left:50%;transform:translate(-50%,150%);z-index:600;background:var(--ink);border:1px solid var(--gold);color:var(--bone);font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;padding:1rem 1.8rem;border-radius:.7rem;transition:transform .5s cubic-bezier(.22,1,.36,1)}
+.toast.show{transform:translate(-50%,0)}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.001s!important;transition-duration:.001s!important}}
+</style>
+<!----></head>
+<body style="">
+
+<!-- PRELOADER -->
+
+
+<canvas id="field" width="773" height="627"></canvas>
+<div class="grain"></div>
+<div class="cursor" style="left: 589px; top: 598px;"></div>
+<div class="cursor-ring" style="top: 598px; left: 589px;"></div>
+<div id="progress"><i id="progressFill"></i></div>
+
+<nav>
+  <a class="logo" href="blob:#top">AEON<em>MI</em></a>
+  <div class="nav-links">
+    <a href="blob:#doctrine">Doctrine</a>
+    <a href="blob:#ecosystem">Ecosystem</a>
+    <a href="blob:#bridge">The Bridge</a>
+    <a href="blob:#" class="btn-enter magnetic" id="openLogin">Enter</a>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="hero-ring">
+    <svg viewBox="0 0 400 400">
+      <defs><path id="ringPath" d="M200,200 m-160,0 a160,160 0 1,1 320,0 a160,160 0 1,1 -320,0"></path></defs>
+      <text><textpath href="#ringPath">aeonmi · web 3.5 · sovereign identity · the long now · elegant intimidation · you know nothing ·</textpath></text>
+    </svg>
+  </div>
+  <p class="hero-eyebrow" style="opacity: 1;">aeonmi.crypto · web 3.5 · est. beyond</p>
+  <h1>
+    <span class="line"><span style="translate: none; rotate: none; scale: none; transform: translate(0px, 0px);">You thought</span></span>
+    <span class="line"><span style="translate: none; rotate: none; scale: none; transform: translate(0px, 0px);">you <em id="knew">knew.</em></span></span>
+  </h1>
+  <p class="hero-sub" style="opacity: 1;">You know nothing. Welcome to the ecosystem that was always one step past the map's edge.</p>
+  <div class="hero-domains" style="opacity: 1;">
+    <span class="domain-chip">identity <b>aeonmi.crypto</b></span>
+    <span class="domain-chip">gateway <b>aeonmi.x</b></span>
+    <span class="domain-chip">mail <b>you@aeonmi.crypto</b></span>
+  </div>
+  <div class="scroll-cue">descend</div>
+</header>
+
+<div class="marquee">
+  <div class="marquee-track" id="marqueeTrack"><span>sovereign identity <b>◈</b> the long now <b>∞</b> elegant intimidation <b>∴</b> you know nothing <b>α</b> sovereign identity <b>◈</b> the long now <b>∞</b> elegant intimidation <b>∴</b> you know nothing <b>α</b> sovereign identity <b>◈</b> the long now <b>∞</b> elegant intimidation <b>∴</b> you know nothing <b>α</b> sovereign identity <b>◈</b> the long now <b>∞</b> elegant intimidation <b>∴</b> you know nothing <b>α</b> </span><span>sovereign identity <b>◈</b> the long now <b>∞</b> elegant intimidation <b>∴</b> you know nothing <b>α</b> sovereign identity <b>◈</b> the long now <b>∞</b> elegant intimidation <b>∴</b> you know nothing <b>α</b> sovereign identity <b>◈</b> the long now <b>∞</b> elegant intimidation <b>∴</b> you know nothing <b>α</b> sovereign identity <b>◈</b> the long now <b>∞</b> elegant intimidation <b>∴</b> you know nothing <b>α</b> </span></div>
+</div>
+
+<section id="doctrine">
+  <p class="sec-label reveal" style="translate: none; rotate: none; scale: none; transform: translate(0px, 50px); opacity: 0;">01 — Doctrine</p>
+  <h2 class="sec-title reveal" style="translate: none; rotate: none; scale: none; transform: translate(0px, 50px); opacity: 0;">What they call the future, we call <em>the foyer.</em></h2>
+  <div class="doctrine-grid">
+    <div class="doctrine-cell reveal" data-n="I" style="translate: none; rotate: none; scale: none; transform: translate(0px, 50px); opacity: 0;">
+      <div class="spot"></div><div class="glyph">α</div>
+      <h3>Sovereign Identity</h3>
+      <p>One name. One key. Zero permission. Your domain is not a username — it is a deed, signed on-chain, owned in the truest sense the word has ever carried.</p>
+    </div>
+    <div class="doctrine-cell reveal" data-n="II" style="translate: none; rotate: none; scale: none; transform: translate(0px, 50px); opacity: 0;">
+      <div class="spot"></div><div class="glyph">∞</div>
+      <h3>The Long Now</h3>
+      <p>Aeonmi is built on aeonic time. Protocols will fork. Chains will rise and fall. The ecosystem compounds quietly while the timeline argues with itself.</p>
+    </div>
+    <div class="doctrine-cell reveal" data-n="III" style="translate: none; rotate: none; scale: none; transform: translate(0px, 50px); opacity: 0;">
+      <div class="spot"></div><div class="glyph">∴</div>
+      <h3>Elegant Intimidation</h3>
+      <p>We do not shout. The interface whispers in serif and gold, and somewhere in the quiet the visitor realizes the ground they stood on was never solid to begin with.</p>
+    </div>
+  </div>
+</section>
+
+<section id="ecosystem">
+  <p class="sec-label reveal" style="translate: none; rotate: none; scale: none; transform: translate(0px, 50px); opacity: 0;">02 — Ecosystem</p>
+  <h2 class="sec-title reveal" style="translate: none; rotate: none; scale: none; transform: translate(0px, 50px); opacity: 0;">Everything of mine, <em>in orbit.</em></h2>
+  <div class="orbit-stage reveal" id="orbitStage" style="translate: none; rotate: none; scale: none; transform: translate(0px, 50px); opacity: 0;">
+    <div class="orbit-core"><span class="c-glyph">◈</span><span class="c-name">aeonmi.crypto</span></div>
+    <div class="orbit-link" id="orbitLink"></div>
+    <div class="orbit-detail" id="orbitDetail">
+      <h4 id="odTitle"></h4><p id="odText"></p><span class="d-tag" id="odTag"></span>
+    </div>
+    <div class="orbit-hint">click a satellite · hover to slow the aeon</div>
+  <div class="orbit-ring" style="height: 229.152px; width: 229.152px;"></div><div class="orbit-ring" style="height: 369.6px; width: 369.6px;"></div><div class="orbit-node reveal" style="left: 513.598px; top: 294.153px;"><div class="o-icon">✉</div><div class="o-name">Aeonmi Mail</div><div class="o-tag">activate now</div></div><div class="orbit-node reveal" style="left: 308.955px; top: 411.19px;"><div class="o-icon">⌬</div><div class="o-name">The Bridge</div><div class="o-tag">hybrid · universal</div></div><div class="orbit-node reveal" style="left: 146.402px; top: 263.847px;"><div class="o-icon">⌖</div><div class="o-name">Signal &amp; Code</div><div class="o-tag">in progress</div></div><div class="orbit-node reveal" style="left: 351.045px; top: 146.81px;"><div class="o-icon">◈</div><div class="o-name">Aeonmi Identity</div><div class="o-tag">live · on-chain</div></div></div>
+</section>
+
+<section id="bridge">
+  <p class="sec-label reveal" style="translate: none; rotate: none; scale: none; transform: translate(0px, 50px); opacity: 0;">03 — The Bridge</p>
+  <h2 class="sec-title reveal" style="translate: none; rotate: none; scale: none; transform: translate(0px, 50px); opacity: 0;">Every browser. <em>Every soul.</em></h2>
+  <div class="resolver reveal" style="translate: none; rotate: none; scale: none; transform: translate(0px, 50px); opacity: 0;">
+    <div class="resolver-bar">
+      <span class="prompt">❯</span>
+      <input id="resolveInput" type="text" placeholder="type a name… e.g. nexus" autocomplete="off" spellcheck="false">
+      <button class="btn-gold magnetic" id="resolveBtn" style="padding:.8rem 1.8rem">Resolve</button>
+    </div>
+    <div class="resolver-body" id="resolverBody">
+      <div class="res-idle">the resolver waits. give it a name.</div>
+    </div>
+    <div class="resolver-hint">.crypto = identity · .x = front door · both paths, one throne room</div>
+  </div>
+</section>
+
+<div class="email-band reveal" style="translate: none; rotate: none; scale: none; transform: translate(0px, 50px); opacity: 0;">
+  <div class="email-inner">
+    <p class="sec-label" style="justify-content:center">04 — Correspondence</p>
+    <h2>Forge your <em>address.</em></h2>
+    <p style="color:var(--ash);font-size:.9rem;max-width:46ch;margin:0 auto;line-height:1.8">Every message lands in a wallet-signed vault. Type your chosen name and watch the deed mint itself.</p>
+    <div class="forge-row">
+      <input id="forgeInput" type="text" placeholder="you" maxlength="24" autocomplete="off" spellcheck="false">
+      <span class="suffix">@aeonmi.crypto</span>
+      <button class="copy-btn" id="copyBtn">Copy</button>
+    </div>
+    <div>
+      <a class="btn-gold magnetic" href="blob:#" id="activateEmail">Activate Your Address</a>
+      <a class="btn-ghost magnetic" href="blob:#" id="openLogin2">Request Access</a>
+    </div>
+  </div>
+</div>
+
+
+<style>
+.gates-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.4rem;margin-top:3rem}
+.gate-card{border:1px solid var(--line);padding:2.2rem 2rem;background:rgba(232,228,218,.03)}
+.gate-card h3{font-family:var(--serif);font-weight:500;font-size:1.7rem;letter-spacing:.04em;margin-bottom:.4rem}
+.gate-card .g-tag{font-family:var(--mono);font-size:.68rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold)}
+.gate-card p{color:var(--ash,#8a8578);margin:.9rem 0 1.6rem;line-height:1.65}
+.gate-btn{display:inline-block;font-family:var(--mono);font-size:.75rem;letter-spacing:.24em;text-transform:uppercase;color:var(--bone,#0a0a0f);background:var(--gold);padding:.85rem 1.9rem;text-decoration:none}
+.gate-btn:hover{filter:brightness(1.1)}
+.gate-soon{display:inline-block;font-family:var(--mono);font-size:.75rem;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);border:1px solid var(--line);padding:.85rem 1.9rem}
+</style>
+<section id="gates">
+  <p class="sec-label reveal">04 — The Gates</p>
+  <h2 class="sec-title reveal">Two doors. <em>Both real.</em></h2>
+  <div class="gates-grid">
+    <div class="gate-card reveal">
+      <span class="g-tag">Live · Stripe</span>
+      <h3>LIGHTGATE</h3>
+      <p>The front gate of the Aeonmi Ecosystem — live now, and taking orders.</p>
+      <a class="gate-btn magnetic" href="https://myaeonmi.netlify.app">Enter LIGHTGATE</a>
+    </div>
+    <div class="gate-card reveal">
+      <span class="g-tag">Gumroad</span>
+      <h3>DARKGATE</h3>
+      <p>The dark counterpart — audited, and sold through Gumroad.</p>
+      <!-- DARKGATE: Warren's Gumroad URL goes on this button when he provides it. -->
+      <span class="gate-soon">On Gumroad</span>
+    </div>
+  </div>
+</section>
+<footer>
+  <div class="big">aeonmi</div>
+  <div class="meta">
+    <b>aeonmi.crypto</b> — sovereign identity<br>
+    <b>aeonmi.x</b> — the bridge<br>
+    © MMXXVI · you know nothing yet
+  </div>
+</footer>
+
+<!-- LOGIN MODAL -->
+<div class="modal" id="loginModal">
+  <div class="modal-bg" id="modalBg"></div>
+  <div class="modal-card">
+    <button class="modal-close" id="closeLogin">×</button>
+    <h3>Enter the Ecosystem</h3>
+    <p class="sub">hybrid access · choose your key</p>
+    <div id="authOpts">
+      <button class="auth-opt" data-auth="unstoppable"><span class="dot" style="background:var(--gold)"></span> Login with Unstoppable <span style="margin-left:auto;font-family:var(--mono);font-size:.6rem;color:var(--ash)">.crypto</span></button>
+      <button class="auth-opt" data-auth="wallet"><span class="dot" style="background:var(--violet)"></span> Connect Wallet <span style="margin-left:auto;font-family:var(--mono);font-size:.6rem;color:var(--ash)">evm</span></button>
+      <div class="divider">or</div>
+      <button class="auth-opt" data-auth="email"><span class="dot" style="background:var(--ash)"></span> Continue with Email <span style="margin-left:auto;font-family:var(--mono);font-size:.6rem;color:var(--ash)">web2</span></button>
+    </div>
+    <div class="auth-flow" id="authFlow"></div>
+    <div class="stamp" id="authStamp">identity confirmed. welcome.</div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+gsap.registerPlugin(ScrollTrigger);
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ── STARFIELD / CONSTELLATION FIELD ─── */
+const cv = $('#field'), cx = cv.getContext('2d');
+let W, H, stars = [], mouse = {x:-9999, y:-9999};
+function sizeField(){ W = cv.width = innerWidth; H = cv.height = innerHeight; }
+sizeField(); addEventListener('resize', sizeField);
+const STAR_N = Math.min(140, innerWidth/9|0);
+for(let i=0;i<STAR_N;i++) stars.push({x:Math.random()*innerWidth, y:Math.random()*innerHeight, vx:(Math.random()-.5)*.22, vy:(Math.random()-.5)*.22, r:Math.random()*1.4+.4, g:Math.random()<.22});
+addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+let bursts = [];
+function spawnBurst(x,y,n=26){ for(let i=0;i<n;i++){ const a = Math.random()*Math.PI*2, s = Math.random()*4+1.5; bursts.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:1,g:Math.random()<.5}); } }
+(function tick(){
+  cx.clearRect(0,0,W,H);
+  for(const s of stars){
+    s.x += s.vx; s.y += s.vy;
+    if(s.x<0)s.x=W; if(s.x>W)s.x=0; if(s.y<0)s.y=H; if(s.y>H)s.y=0;
+    const dx = s.x-mouse.x, dy = s.y-mouse.y, d = Math.hypot(dx,dy);
+    if(d<120 && d>0){ s.x += dx/d*.6; s.y += dy/d*.6; }
+    cx.beginPath(); cx.arc(s.x,s.y,s.r,0,7);
+    cx.fillStyle = s.g ? 'rgba(201,168,106,.55)' : 'rgba(232,228,218,.28)';
+    cx.fill();
+  }
+  for(let i=0;i<stars.length;i++) for(let j=i+1;j<stars.length;j++){
+    const a=stars[i], b=stars[j], d=Math.hypot(a.x-b.x,a.y-b.y);
+    if(d<105){ cx.beginPath(); cx.moveTo(a.x,a.y); cx.lineTo(b.x,b.y);
+      cx.strokeStyle = `rgba(107,92,231,${(1-d/105)*.13})`; cx.stroke(); }
+  }
+  bursts = bursts.filter(p => p.life > 0);
+  for(const p of bursts){ p.x+=p.vx; p.y+=p.vy; p.vx*=.96; p.vy*=.96; p.life-=.02;
+    cx.beginPath(); cx.arc(p.x,p.y,1.8*p.life+0.4,0,7);
+    cx.fillStyle = p.g?`rgba(201,168,106,${p.life})`:`rgba(107,92,231,${p.life})`; cx.fill(); }
+  requestAnimationFrame(tick);
+})();
+
+/* ── PRELOADER ─── */
+const glyphs = ['α','∞','∴','◈','✉','⌬'];
+let gi = 0;
+const gcycle = setInterval(()=>{ $('#glyphCycle').textContent = glyphs[gi++ % glyphs.length]; }, 220);
+const lines = ['you thought you were loading.','the aeon does not hurry.','compiling the long now.','you know nothing — yet.'];
+let li = 0;
+const lcycle = setInterval(()=>{ $('#loadLine').textContent = lines[li++ % lines.length]; }, 700);
+const prog = {v:0};
+gsap.to(prog, {v:100, duration: reduced ? .1 : 2.4, ease:'power2.inOut',
+  onUpdate(){ $('#loadPct').textContent = Math.round(prog.v); $('#loadBarFill').style.transform = `scaleX(${prog.v/100})`; },
+  onComplete(){
+    clearInterval(gcycle); clearInterval(lcycle);
+    gsap.to('#loader', {yPercent:-100, duration:.9, ease:'power4.inOut', delay:.25, onComplete(){ $('#loader').remove(); heroIntro(); }});
+  }});
+
+/* ── HERO INTRO ─── */
+function heroIntro(){
+  const tl = gsap.timeline();
+  tl.to('.hero-eyebrow', {opacity:1, duration:1, ease:'power2.out'})
+    .to('.hero h1 .line span', {y:0, duration:1.2, ease:'power4.out', stagger:.14}, '-=.5')
+    .to('.hero-sub', {opacity:1, duration:1}, '-=.5')
+    .to('.hero-domains', {opacity:1, duration:1}, '-=.6');
+}
+
+/* "knew." dissolves on click — proof you know nothing */
+$('#knew').addEventListener('click', e => {
+  spawnBurst(e.clientX, e.clientY, 40);
+  gsap.fromTo('#knew', {opacity:1}, {opacity:.1, duration:.25, yoyo:true, repeat:1, ease:'power2.inOut'});
+  showToast('see? you know nothing.');
+});
+
+/* ── CURSOR ─── */
+const cur = $('.cursor'), ring = $('.cursor-ring');
+let rx=innerWidth/2, ry=innerHeight/2;
+addEventListener('mousemove', e => {
+  cur.style.left = e.clientX+'px'; cur.style.top = e.clientY+'px';
+  gsap.to(ring, {left:e.clientX, top:e.clientY, duration:.45, ease:'power3.out'});
+});
+$$('a,button,input,.orbit-node,.domain-chip').forEach(el=>{
+  el.addEventListener('mouseenter',()=>ring.classList.add('hovering'));
+  el.addEventListener('mouseleave',()=>ring.classList.remove('hovering'));
+});
+
+/* ── MAGNETIC ─── */
+$$('.magnetic').forEach(el=>{
+  el.addEventListener('mousemove', e=>{
+    const r = el.getBoundingClientRect();
+    gsap.to(el,{x:(e.clientX-r.left-r.width/2)*.25, y:(e.clientY-r.top-r.height/2)*.35, duration:.4});
+  });
+  el.addEventListener('mouseleave', ()=> gsap.to(el,{x:0,y:0,duration:.6,ease:'elastic.out(1,.4)'}));
+});
+
+/* ── SCROLL PROGRESS + REVEALS ─── */
+addEventListener('scroll', ()=>{
+  const p = scrollY/(document.body.scrollHeight-innerHeight);
+  $('#progressFill').style.transform = `scaleX(${p})`;
+});
+$$('.reveal').forEach(el=>{
+  gsap.to(el,{opacity:1,y:0,duration:1.1,ease:'power3.out',
+    scrollTrigger:{trigger:el, start:'top 85%'}});
+});
+
+/* ── MARQUEE ─── */
+const phrase = 'sovereign identity <b>◈</b> the long now <b>∞</b> elegant intimidation <b>∴</b> you know nothing <b>α</b> ';
+$('#marqueeTrack').innerHTML = `<span>${phrase.repeat(4)}</span><span>${phrase.repeat(4)}</span>`;
+
+/* ── DOCTRINE: spotlight + tilt ─── */
+$$('.doctrine-cell').forEach(cell=>{
+  cell.addEventListener('mousemove', e=>{
+    const r = cell.getBoundingClientRect();
+    cell.style.setProperty('--mx', (e.clientX-r.left)+'px');
+    cell.style.setProperty('--my', (e.clientY-r.top)+'px');
+    const px = (e.clientX-r.left)/r.width-.5, py = (e.clientY-r.top)/r.height-.5;
+    gsap.to(cell,{rotateY:px*7, rotateX:-py*7, duration:.5, ease:'power2.out', transformPerspective:900});
+  });
+  cell.addEventListener('mouseleave', ()=> gsap.to(cell,{rotateX:0,rotateY:0,duration:.8,ease:'elastic.out(1,.5)'}));
+});
+
+/* ── ORBITAL ECOSYSTEM ─── */
+const sats = [
+  {icon:'✉', name:'Aeonmi Mail',  tag:'activate now',   title:'Aeonmi Mail',
+   text:'Encrypted, wallet-native email at @aeonmi.crypto. Your inbox is a vault, not a feed. Activated from your Unstoppable dashboard in minutes.'},
+  {icon:'⌬', name:'The Bridge',   tag:'hybrid · universal', title:'The Bridge',
+   text:'Web 3.5 means nobody gets left at the door. Chrome, Edge, Safari, DuckDuckGo — resolve .crypto natively or walk in through aeonmi.x. Same throne room.'},
+  {icon:'⌖', name:'Signal & Code',tag:'in progress',    title:'Signal & Code',
+   text:'Where the writing happens. Long-form doctrine, shipped contracts, open repositories — the public trail of everything being built inside the ecosystem.'},
+  {icon:'◈', name:'Aeonmi Identity', tag:'live · on-chain', title:'Aeonmi Identity',
+   text:'The root of it all. aeonmi.crypto as on-chain passport — profile, credentials, reputation and ownership graph, portable across every chain we touch.'}
+];
+const stage = $('#orbitStage');
+let orbitR = 200, speed = .0035, angle = 0, hovered = false, activeIdx = -1;
+function layoutStage(){
+  const w = stage.clientWidth;
+  orbitR = Math.min(230, Math.max(140, w*0.28));
+  stage.querySelectorAll('.orbit-ring').forEach(r=>r.remove());
+  [0.62,1].forEach(f=>{
+    const el = document.createElement('div');
+    el.className='orbit-ring';
+    el.style.width = el.style.height = (orbitR*2*f)+'px';
+    stage.appendChild(el);
+  });
+}
+layoutStage(); addEventListener('resize', layoutStage);
+const nodeEls = sats.map((s,i)=>{
+  const el = document.createElement('div');
+  el.className = 'orbit-node reveal';
+  el.innerHTML = `<div class="o-icon">${s.icon}</div><div class="o-name">${s.name}</div><div class="o-tag">${s.tag}</div>`;
+  el.addEventListener('mouseenter', ()=>hovered=true);
+  el.addEventListener('mouseleave', ()=>hovered=false);
+  el.addEventListener('click', ()=>selectSat(i));
+  stage.appendChild(el);
+  return el;
+});
+function selectSat(i){
+  activeIdx = i;
+  nodeEls.forEach((n,j)=>n.classList.toggle('active', j===i));
+  $('#odTitle').textContent = sats[i].title;
+  $('#odText').textContent = sats[i].text;
+  $('#odTag').textContent = sats[i].tag;
+  $('#orbitDetail').classList.add('show');
+}
+(function orbit(){
+  const sp = hovered ? speed*.18 : speed;
+  angle += sp;
+  const cxp = stage.clientWidth/2, cyp = stage.clientHeight/2;
+  sats.forEach((s,i)=>{
+    const a = angle + i*(Math.PI*2/sats.length);
+    const x = cxp + Math.cos(a)*orbitR, y = cyp + Math.sin(a)*orbitR*.72;
+    nodeEls[i].style.left = x+'px'; nodeEls[i].style.top = y+'px';
+    if(i===activeIdx){
+      const link = $('#orbitLink');
+      const dx = x-cxp, dy = y-cyp, len = Math.hypot(dx,dy);
+      link.style.width = len+'px';
+      link.style.transform = `rotate(${Math.atan2(dy,dx)}rad)`;
+      link.style.opacity = 1;
+    }
+  });
+  requestAnimationFrame(orbit);
+})();
+
+/* ── RESOLVER DEMO ─── */
+function strHash(s){ let h=5381; for(const c of s) h=(h*33 ^ c.charCodeAt(0))>>>0; return h; }
+function fakeCid(name){
+  const chars='abcdefghijklmnopqrstuvwxyz234567', h=strHash(name||'aeonmi'); let out='bafybei';
+  for(let i=0;i<38;i++) out += chars[(h*(i+7)+i*13)%32];
+  return out;
+}
+function runResolve(){
+  const name = ($('#resolveInput').value.trim().toLowerCase()||'aeonmi').replace(/[^a-z0-9-]/g,'');
+  const body = $('#resolverBody'); body.innerHTML = '';
+  const steps3 = [
+    ['query', `${name}.aeonmi.crypto → resolver.unstoppable.io`],
+    ['record', `contentHash → ipfs://${fakeCid(name)}`],
+    ['native', `Brave / Opera / Extension → direct resolution`]
+  ];
+  const steps2 = [
+    ['query', `${name}.aeonmi.x → traditional DNS`],
+    ['gateway', `proxy → decentralized stack (same content)`],
+    ['universal', `Chrome · Safari · DuckDuckGo → full access`]
+  ];
+  [['WEB3 — NATIVE PATH',steps3,'var(--gold)'],['WEB2 — GATEWAY PATH',steps2,'var(--violet)']].forEach(([title,steps,color],pi)=>{
+    const pane = document.createElement('div'); pane.className='res-pane';
+    pane.innerHTML = `<h4 style="color:${color}">${title}</h4>`;
+    const rows = steps.map(([k,v])=>{
+      const d = document.createElement('div'); d.className='res-step';
+      d.innerHTML = `<span class="k">${k}</span><span class="v">${v}</span>`;
+      pane.appendChild(d); return d;
+    });
+    body.appendChild(pane);
+    rows.forEach((r,i)=> gsap.to(r,{opacity:1,x:0,duration:.6,delay:.15+i*.3+pi*.1,ease:'power3.out'}));
+  });
+  showToast(`resolved: ${name}.aeonmi.crypto ✓`);
+}
+$('#resolveBtn').addEventListener('click', runResolve);
+$('#resolveInput').addEventListener('keydown', e=>{ if(e.key==='Enter') runResolve(); });
+
+/* ── EMAIL FORGE ─── */
+const forge = $('#forgeInput');
+let scrambleT = null;
+function scramble(target){
+  const chars = 'α∴◈∞xqzkm@#';
+  clearInterval(scrambleT);
+  scrambleT = setInterval(()=>{
+    forge.value = target.split('').map((c,i)=> Math.random()<.4 ? chars[Math.random()*chars.length|0] : c).join('');
+  }, 50);
+  setTimeout(()=>{ clearInterval(scrambleT); forge.value = target; }, 500);
+}
+forge.addEventListener('input', ()=>{ scramble(forge.value); });
+$('#copyBtn').addEventListener('click', ()=>{
+  const addr = (forge.value.trim()||'you') + '@aeonmi.crypto';
+  navigator.clipboard?.writeText(addr).catch(()=>{});
+  showToast(`copied: ${addr}`);
+});
+$('#activateEmail').addEventListener('click', e=>{ e.preventDefault(); showToast('redirect → unstoppable domains dashboard'); });
+
+/* ── LOGIN MODAL + AUTH FLOW ─── */
+const modal = $('#loginModal');
+function openModal(){ modal.classList.add('open'); resetAuth(); }
+function closeModal(){ modal.classList.remove('open'); }
+function resetAuth(){
+  $('#authOpts').style.display='block';
+  $('#authFlow').classList.remove('show'); $('#authFlow').innerHTML='';
+  $('#authStamp').classList.remove('show');
+}
+['openLogin','openLogin2'].forEach(id=> $('#'+id).addEventListener('click', e=>{ e.preventDefault(); openModal(); }));
+$('#closeLogin').addEventListener('click', closeModal);
+$('#modalBg').addEventListener('click', closeModal);
+addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
+const flows = {
+  unstoppable:['Requesting authorization…','Verifying domain signature…','Identity confirmed → aeonmi.crypto'],
+  wallet:['Connecting wallet…','Awaiting signature…','Connected → 0x7a3f…9e21'],
+  email:['Sending secure link…','Link delivered to your vault inbox','Session established']
+};
+$$('.auth-opt').forEach(btn=> btn.addEventListener('click', ()=>{
+  $('#authOpts').style.display='none';
+  const flow = $('#authFlow'); flow.innerHTML=''; flow.classList.add('show');
+  const steps = flows[btn.dataset.auth].map(t=>{
+    const d = document.createElement('div'); d.className='flow-step';
+    d.innerHTML = `<span class="f-dot"></span><span>${t}</span>`;
+    flow.appendChild(d); return d;
+  });
+  steps.forEach((s,i)=>{
+    setTimeout(()=>{ s.classList.add('working'); gsap.to(s,{opacity:1,y:0,duration:.5}); }, i*900);
+    setTimeout(()=>{ s.classList.remove('working'); s.classList.add('done'); }, i*900+850);
+  });
+  setTimeout(()=>{
+    $('#authStamp').classList.add('show');
+    setTimeout(()=>{ closeModal(); showToast('WELCOME TO THE AEON'); }, 1400);
+  }, steps.length*900+200);
+}));
+
+/* ── TOAST ─── */
+let toastT;
+function showToast(msg){
+  const t = $('#toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastT); toastT = setTimeout(()=>t.classList.remove('show'), 2600);
+}
+
+/* ── EASTER EGG: type "aeon" → ghost mode ─── */
+let buf = '';
+addEventListener('keydown', e=>{
+  if(e.target.tagName==='INPUT') return;
+  buf = (buf + e.key.toLowerCase()).slice(-4);
+  if(buf==='aeon'){ document.body.classList.toggle('ghost'); showToast(document.body.classList.contains('ghost')?'GHOST MODE ENGAGED':'returned to the flesh'); buf=''; }
+});
+</script>
+
+
+</body></html>
