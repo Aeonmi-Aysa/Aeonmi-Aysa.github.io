@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DARK META — The Store</title>
+<meta name="description" content="The Dark Meta store: books, music, wallpapers and commissions from AEONMI INC. Built in the dark, sold in the open.">
+<meta property="og:title" content="DARK META — The Store">
+<meta property="og:description" content="Books, music, wallpapers and commissions from AEONMI INC.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://aeonmi-aysa.github.io/store.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Space+Grotesk:wght@300;400;500;600&family=IBM+Plex+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#050507; --ink:#0a0a0f; --bone:#e8e4da; --ash:#8a8578;
+  --gold:#c9a86a; --gold-dim:#7a6647; --violet:#6b5ce7;
+  --line:rgba(201,168,106,.14);
+  --serif:'Cormorant Garamond',serif; --sans:'Space Grotesk',sans-serif; --mono:'IBM Plex Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--bone);font-family:var(--sans);overflow-x:hidden}
+::selection{background:var(--gold);color:var(--void)}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:1.4rem 3rem;background:linear-gradient(180deg,rgba(5,5,7,.92),rgba(5,5,7,0))}
+.logo{font-family:var(--serif);font-size:1.5rem;letter-spacing:.35em;font-weight:400;color:var(--bone);text-decoration:none}
+.logo em{color:var(--gold);font-style:normal}
+.nav-links{display:flex;gap:2.4rem;align-items:center}
+.nav-links a{color:var(--bone);text-decoration:none;font-family:var(--mono);font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;opacity:.75;transition:opacity .3s}
+.nav-links a:hover{opacity:1;color:var(--gold)}
+@media(max-width:760px){.nav-links a{display:none}.nav-links a.store-link{display:inline-block}nav{padding:1.2rem 1.4rem}}
+.hero{padding:11rem 1.5rem 4rem;text-align:center}
+.eyebrow{font-family:var(--mono);font-size:.7rem;letter-spacing:.5em;text-transform:uppercase;color:var(--gold);margin-bottom:1.8rem}
+.hero h1{font-family:var(--serif);font-weight:300;font-size:clamp(3rem,9vw,6.5rem);line-height:.95}
+.hero h1 em{font-style:italic;color:var(--gold)}
+.hero p{margin:2rem auto 0;font-family:var(--serif);font-style:italic;font-size:clamp(1.05rem,2.2vw,1.4rem);color:var(--ash);max-width:52ch}
+section{padding:4.5rem 1.5rem;max-width:1200px;margin:0 auto}
+.sec-head{display:flex;align-items:baseline;gap:1.6rem;margin-bottom:2.6rem;border-bottom:1px solid var(--line);padding-bottom:1.2rem}
+.sec-head h2{font-family:var(--serif);font-weight:400;font-size:clamp(2rem,4.5vw,3rem)}
+.sec-head h2 em{font-style:italic;color:var(--gold)}
+.sec-head span{font-family:var(--mono);font-size:.65rem;letter-spacing:.3em;text-transform:uppercase;color:var(--ash)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1.4rem}
+.card{border:1px solid var(--line);background:var(--ink);padding:1.8rem 1.6rem;display:flex;flex-direction:column;gap:.9rem;transition:border-color .3s,transform .3s}
+.card:hover{border-color:var(--gold);transform:translateY(-3px)}
+.card h3{font-family:var(--serif);font-weight:500;font-size:1.45rem;line-height:1.15}
+.card p{font-size:.88rem;color:var(--ash);line-height:1.55;flex:1}
+.price{font-family:var(--mono);color:var(--gold);font-size:1rem;letter-spacing:.08em}
+.btn{display:inline-block;font-family:var(--mono);font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--void);background:var(--bone);padding:.75rem 1.4rem;border-radius:2rem;text-decoration:none;text-align:center;transition:background .3s}
+.btn:hover{background:var(--gold)}
+.btn.ghost{background:transparent;color:var(--bone);border:1px solid var(--line)}
+.btn.ghost:hover{border-color:var(--gold);color:var(--gold)}
+.wp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.4rem}
+.wp{border:1px solid var(--line);background:var(--ink);overflow:hidden}
+.wp img{width:100%;height:300px;object-fit:cover;display:block}
+.wp .wp-body{padding:1.3rem 1.4rem;display:flex;flex-direction:column;gap:.8rem}
+.wp h3{font-family:var(--serif);font-weight:500;font-size:1.3rem}
+.wp p{font-size:.85rem;color:var(--ash)}
+.music-note{border:1px solid var(--line);background:var(--ink);padding:2.4rem;text-align:center}
+.music-note .big{font-family:var(--serif);font-size:clamp(2.4rem,6vw,4rem);color:var(--gold);font-weight:300}
+.music-note p{color:var(--ash);max-width:56ch;margin:1rem auto 1.8rem;line-height:1.6}
+footer{border-top:1px solid var(--line);padding:3rem 1.5rem;text-align:center;color:var(--ash);font-size:.85rem}
+footer .flogo{font-family:var(--serif);letter-spacing:.35em;font-size:1.2rem;color:var(--bone);margin-bottom:1rem}
+footer a{color:var(--gold);text-decoration:none}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="index.html">DARK<em>META</em></a>
+  <div class="nav-links">
+    <a href="index.html">Aeonmi</a>
+    <a href="services.html">Services</a>
+    <a href="store.html" class="store-link">Store</a>
+    <a href="mailto:digital@darkmeta.ai">Contact</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="eyebrow">AEONMI INC · Est. in the dark</div>
+  <h1>The Dark Meta <em>Store</em></h1>
+  <p>Books from the library, music from the vault, wallpapers from the glyph field — and commissions built by hand. Everything here is made by one engineer and sold without a middleman.</p>
+</header>
+
+<section id="books">
+  <div class="sec-head"><h2>The <em>Library</em></h2><span>11 titles live · 40 in the full library</span></div>
+  <div class="grid">
+    <div class="card"><h3>Human Exploit Systems</h3><p>The launch sampler. How people are the perimeter — and how the perimeter gets walked through.</p><div class="price">$3.99</div><a class="btn" href="https://darkmeta.gumroad.com/l/qlbtbx">Get it on Gumroad</a></div>
+    <div class="card"><h3>Image Hunter</h3><p>Finding what photographs give away — and what they hide.</p><div class="price">$9.99</div><a class="btn" href="https://darkmeta.gumroad.com">Get it on Gumroad</a></div>
+    <div class="card"><h3>Red Team Mind</h3><p>Thinking like the adversary, written by one who defends.</p><div class="price">$9.99</div><a class="btn" href="https://darkmeta.gumroad.com">Get it on Gumroad</a></div>
+    <div class="card"><h3>Dead Drop Networks</h3><p>Communication that leaves nothing behind.</p><div class="price">$9.99</div><a class="btn" href="https://darkmeta.gumroad.com">Get it on Gumroad</a></div>
+    <div class="card"><h3>Remote Access Terminal</h3><p>Distance is not a defense.</p><div class="price">$6.99</div><a class="btn" href="https://darkmeta.gumroad.com">Get it on Gumroad</a></div>
+    <div class="card"><h3>The Cognitive Firewall</h3><p>Your attention is under attack. Build the wall.</p><div class="price">$6.99</div><a class="btn" href="https://darkmeta.gumroad.com">Get it on Gumroad</a></div>
+    <div class="card"><h3>Neural Resistance Architecture</h3><p>Structuring a mind that cannot be easily moved.</p><div class="price">$6.99</div><a class="btn" href="https://darkmeta.gumroad.com">Get it on Gumroad</a></div>
+    <div class="card"><h3>Burn the Feed</h3><p>An exit manual for the attention machine.</p><div class="price">$6.99</div><a class="btn" href="https://darkmeta.gumroad.com">Get it on Gumroad</a></div>
+    <div class="card"><h3>Voiceprint Sabotage</h3><p>Your voice is a key. Keys get copied.</p><div class="price">$6.99</div><a class="btn" href="https://darkmeta.gumroad.com">Get it on Gumroad</a></div>
+    <div class="card"><h3>The Blackout Agency</h3><p>Operating when the lights go out.</p><div class="price">$6.99</div><a class="btn" href="https://darkmeta.gumroad.com">Get it on Gumroad</a></div>
+    <div class="card"><h3>Sovereign Cognition Systems</h3><p>Own your mind the way you own your machines.</p><div class="price">$6.99</div><a class="btn" href="https://darkmeta.gumroad.com">Get it on Gumroad</a></div>
+    <div class="card"><h3>The Full Library</h3><p>All eleven live titles — and the rest of the forty as they land — on the Dark Meta Gumroad shelf.</p><div class="price">from $3.99</div><a class="btn ghost" href="https://darkmeta.gumroad.com">Browse the shelf</a></div>
+  </div>
+</section>
+
+<section id="music">
+  <div class="sec-head"><h2>The <em>Vault</em></h2><span>Music · 200+ original tracks</span></div>
+  <div class="music-note">
+    <div class="big">200+ tracks</div>
+    <p>The Dark Meta vault holds over two hundred original songs. The catalog is being prepared for release — singles, bundles, and free drops for the ones who were here first. Want first word when the vault opens, or a track licensed for your project?</p>
+    <a class="btn" href="mailto:digital@darkmeta.ai?subject=Dark%20Meta%20music%20vault">Ask about the music</a>
+  </div>
+</section>
+
+<section id="wallpapers">
+  <div class="sec-head"><h2>Glyph <em>Wallpapers</em></h2><span>Free · Dark Meta originals</span></div>
+  <div class="wp-grid">
+    <div class="wp"><img src="wallpapers/glyph-sigil-desktop.jpg" alt="Golden glyph sigil on black — desktop wallpaper"><div class="wp-body"><h3>Glyph Sigil</h3><p>Desktop · The seal at the center of the field.</p><a class="btn" href="wallpapers/glyph-sigil-desktop.jpg" download>Download free</a></div></div>
+    <div class="wp"><img src="wallpapers/mask-cascade-phone.jpg" alt="Golden mask with cascading glyphs — phone wallpaper"><div class="wp-body"><h3>Mask Cascade</h3><p>Phone · The Warden's rain.</p><a class="btn" href="wallpapers/mask-cascade-phone.jpg" download>Download free</a></div></div>
+    <div class="wp"><img src="wallpapers/glyph-torus-desktop.jpg" alt="Golden glyph torus over black water — desktop wallpaper"><div class="wp-body"><h3>Glyph Torus</h3><p>Desktop · The constellation engine.</p><a class="btn" href="wallpapers/glyph-torus-desktop.jpg" download>Download free</a></div></div>
+  </div>
+</section>
+
+<section id="commissions">
+  <div class="sec-head"><h2><em>Commissions</em></h2><span>Built by hand · Houston, TX</span></div>
+  <div class="grid">
+    <div class="card"><h3>AI Chatbots</h3><p>A custom bot for your business — trained on your material, answering your customers day and night. The Warden, guarding this very site, is the live demo.</p><div class="price">from $299</div><a class="btn" href="services.html">See services</a></div>
+    <div class="card"><h3>Web Design</h3><p>Websites with a pulse — designed, built, and launched.</p><div class="price">from $499</div><a class="btn" href="services.html">See services</a></div>
+    <div class="card"><h3>App Development</h3><p>Real applications, scoped honestly and built to order.</p><div class="price">from $1,499</div><a class="btn" href="services.html">See services</a></div>
+  </div>
+</section>
+
+<footer>
+  <div class="flogo">DARK<em style="color:var(--gold);font-style:normal">META</em></div>
+  <p>AEONMI INC · <a href="mailto:digital@darkmeta.ai">digital@darkmeta.ai</a> · <a href="https://darkmeta.gumroad.com">Gumroad</a> · <a href="index.html">aeonmi.crypto</a></p>
+  <p style="margin-top:.8rem">LIGHTGATE is open. DARKGATE opens by the Founder's word.</p>
+</footer>
+
+<script async src="https://platform.aminos.ai/w/chat_plugin.js" data-bot-id="15323"></script>
+</body>
+</html>
